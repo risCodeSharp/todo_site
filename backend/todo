@@ -1,0 +1,21 @@
+[] -> delete task from id
+[] -> delete single item from task from id
+[x] -> get all tasks
+[] -> make a task_group
+
+CREATE TABLE projects (
+    id SERIAL PRIMARY KEY
+    tags TEXT[]
+)
+
+CREATE TABLE TASKS (
+    id SERIAL PRIMARY KEY,
+    name TEXT,
+    project_id INTEGER NOT NULL,
+    CONSTRAINT fk_project 
+        FOREIGN KEY(projects(id))
+        REFERENCES projects(id)
+        ON DELETE CASCADE
+);
+
+DELETE FROM projects WHERE id = 3;
