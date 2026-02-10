@@ -2,19 +2,28 @@ mod models;
 mod repositories;
 mod routes;
 
+
 use axum::{
-    Router,
-    routing::{delete, get, post, put},
+    Router, routing::{delete, get, post, put}
 };
 use dotenvy::dotenv;
 use sqlx::postgres::PgPoolOptions;
 use std::env;
+
+use tower_http::cors::{CorsLayer, Any};
+use axum::http::{HeaderValue, Method};
 
 #[tokio::main]
 async fn main() {
     // Load Environmental variable
     dotenv().ok();
     let db_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+
+    // Cors config
+    let cors = CorsLayer::new() 
+        .allow_origin("http://localhost:3000".parse::<HeaderValue>().unwrap())
+        .allow_methods([Method::GET, Method::PUT, Method::POST, Method::DELETE])
+        .allow_headers(Any);
 
     // Connect to the database
     let pool = PgPoolOptions::new()
@@ -41,7 +50,8 @@ async fn main() {
         "/projects/{project_id}/tasks/{task_id}",
         delete(routes::tasks::delete_task),
     )
-    .with_state(pool);
+    .with_state(pool)
+    .layer(cors);
 
     // Start Server
     println!("Server running on http://localhost:6767");

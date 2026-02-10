@@ -45,16 +45,3 @@ pub async fn delete_task(
         Err(_) => (StatusCode::INTERNAL_SERVER_ERROR, "Failed to delete task").into_response(),
     }
 }
-
-// pub async fn delete_task(State(pool): State<PgPool>, Path(id): Path<i32>) -> impl IntoResponse {
-//     match TaskRepository::delete_task_by_id(&pool, id).await {
-//         Ok(rows_affected) => {
-//             if rows_affected > 0 {
-//                 (StatusCode::OK, format!("deleted task, id = {}", id)).into_response()
-//             } else {
-//                 (StatusCode::NO_CONTENT).into_response()
-//             }
-//         }
-//         Err(_e) => (StatusCode::NOT_FOUND, "Failed to delete task").into_response(),
-//     }
-// }

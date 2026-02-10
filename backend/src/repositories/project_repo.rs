@@ -1,5 +1,4 @@
 use crate::models::project::{CreateProject, Project, UpdateProject};
-use axum::{response::IntoResponse};
 use sqlx::PgPool;
 use sqlx::error::Error;
 pub struct ProjectRepository;
