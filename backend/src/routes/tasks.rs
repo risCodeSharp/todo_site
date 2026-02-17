@@ -1,7 +1,10 @@
-use crate::models::task::{CreateTask, ProjectWithTags, Task, UpdateTask};
-use crate::repositories::task_repo::TaskRepository;
-use axum::extract::Path;
-use axum::{Json, extract::State, http::StatusCode, response::IntoResponse};
+use std::task;
+
+use crate::models::task::{CreateTask, UpdateTask};
+use crate::repo::task_repo::TaskRespository;
+use axum::extract::{Path, State};
+use axum::http::StatusCode;
+use axum::{Json, response::IntoResponse};
 use sqlx::PgPool;
 
 pub async fn create_task(
@@ -9,39 +12,47 @@ pub async fn create_task(
     Path(project_id): Path<i32>,
     Json(payload): Json<CreateTask>,
 ) -> impl IntoResponse {
-    match TaskRepository::create_task(&pool, payload, project_id).await {
-        Ok(task) => (StatusCode::CREATED, Json(task)).into_response(),
-        Err(_) => (StatusCode::INTERNAL_SERVER_ERROR, "Failed to create task").into_response(),
+    match TaskRespository::create(&pool, payload, project_id).await {
+        Ok(new_task) => (StatusCode::CREATED, Json(new_task)).into_response(),
+        Err(e) => (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "Failed to create new task",
+        )
+            .into_response(),
     }
 }
 
-pub async fn get_tasks_by_project_id(
+pub async fn list_tasks(
     State(pool): State<PgPool>,
-    Path(project_id): Path<i32>
+    Path(project_id): Path<i32>,
 ) -> impl IntoResponse {
-    match TaskRepository::get_tasks_by_project_id(&pool, project_id).await {
-        Ok(project_tasks) => (StatusCode::OK, Json(project_tasks)).into_response(),
-        Err(_e) => (StatusCode::INTERNAL_SERVER_ERROR, "Failed to get project tasks").into_response()
+    match TaskRespository::list_all(&pool, project_id).await {
+        Ok(task_list) => (StatusCode::OK, Json(task_list)).into_response(),
+        Err(e) => (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "Failed to delete task",
+        )
+            .into_response(),
     }
-}  
+}
 
 pub async fn update_task(
     State(pool): State<PgPool>,
-    Path((project_id,task_id)): Path<(i32,i32)>,
-    Json(payload): Json<UpdateTask>
-)-> impl IntoResponse {
-    match TaskRepository::update_task(&pool, payload, project_id, task_id).await {
-         Ok(task) => (StatusCode::OK, Json(task)).into_response(),
-        Err(_) => (StatusCode::INTERNAL_SERVER_ERROR, "Failed to update task").into_response(),
+    Path(task_id): Path<i32>,
+    Json(payload): Json<UpdateTask>,
+) -> impl IntoResponse {
+    match TaskRespository::update(&pool, payload, task_id).await {
+        Ok(update_task) => (StatusCode::OK, Json(update_task)).into_response(),
+        Err(_) => (StatusCode::NOT_MODIFIED, "Task is not updated!").into_response(),
     }
 }
 
 pub async fn delete_task(
     State(pool): State<PgPool>,
-    Path((project_id, task_id)) : Path<(i32,i32)>
+    Path(task_id): Path<i32>,
 ) -> impl IntoResponse {
-    match TaskRepository::delete_task(&pool, project_id, task_id).await {
-         Ok(task) => (StatusCode::OK, Json(task)).into_response(),
-        Err(_) => (StatusCode::INTERNAL_SERVER_ERROR, "Failed to delete task").into_response(),
+    match TaskRespository::delete(&pool, task_id).await {
+        Ok(delete_task) => (StatusCode::OK, Json(delete_task)).into_response(),
+        Err(_) =>(StatusCode::BAD_REQUEST, "Failed delete to task!").into_response()
     }
 }

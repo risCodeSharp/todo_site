@@ -1,22 +1,24 @@
 use serde::{Deserialize, Serialize};
-use sqlx::prelude::FromRow;
-use crate::types::WorkStatus;
+use sqlx::FromRow;
+
+use crate::types::{Difficulty, WorkStatus};
 
 #[derive(Serialize, Deserialize, FromRow)]
-pub struct Task {
+pub struct Job {
     pub id: i32,
-    pub project_id: i32,
+    pub task_id: i32,
     pub name: String,
     pub status: WorkStatus,
+    pub difficulty: Difficulty,
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct CreateTask {
-    pub name: String
+pub struct CreateJob {
+    pub name: String,
 }
-
 #[derive(Serialize, Deserialize)]
-pub struct UpdateTask {
+pub struct UpdateJob {
     pub name: String,
     pub status: WorkStatus,
+    pub difficulty: Difficulty,
 }

@@ -27,8 +27,8 @@ const addProject = async () => {
 
   try {
     await axios.post(
-      "api/projects",
-      { name: newProjectName.value },
+      "/api/projects",
+      { name: newProjectName.value, description: "" },
       { headers: { Accept: "application/json" } },
     );
 
@@ -43,7 +43,7 @@ const addProject = async () => {
 
 const deleteProject = async (id: number) => {
   try {
-    await axios.delete(`api/projects/${id}`);
+    await axios.delete(`/api/projects/${id}`);
 
     projectList.value = projectList.value.filter((p) => p.id !== id);
   } catch (error: unknown) {
@@ -56,6 +56,8 @@ const deleteProject = async (id: number) => {
 onMounted(fetchProjects);
 </script>
 <template>
+    <div class="mt-24 p-10 max-w-5xl mx-auto flex-1">
+
     <h1 class="text-3xl font-bold text-violet-600 dark:text-violet-400">
       Todo Projects!
     </h1>
@@ -65,4 +67,5 @@ onMounted(fetchProjects);
       v-model="newProjectName"
     />
   <ProjectList :project-list="projectList" @delete="deleteProject" />
+  </div>
 </template>

@@ -1,5 +1,0 @@
-Invoke-RestMethod `
-  -Uri "http://localhost:6767/tasks/learn-rust" `
-  -Method PUT `
-  -ContentType "application/json" `
-  -Body '{"is_completed":true}'

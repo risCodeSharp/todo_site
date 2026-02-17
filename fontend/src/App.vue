@@ -25,9 +25,9 @@ const toggleTheme = () => (isDark.value = !isDark.value);
     class="min-h-screen bg-linear-to-b from-slate-100 to-white dark:from-gray-800 dark:to-gray-900 text-black dark:text-white transition-colors duration-300 flex flex-col"
   >
     <Navbar :isDark="isDark" @toggle-theme="toggleTheme" />
-    <main class="mt-24 p-6 max-w-5xl mx-auto flex-1">
+    <main class="mt-24">
       <router-view />
-    </main>
+      </main>
   </div>
 </template>
 
