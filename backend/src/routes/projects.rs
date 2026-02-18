@@ -9,10 +9,12 @@ pub async fn create_project(
 ) -> impl IntoResponse {
     match ProjectRespository::create(&pool, payload).await {
         Ok(new_project) => {
-            println!("{:?}",new_project);
             (StatusCode::CREATED, Json(new_project)).into_response()
             },
-        Err(e) => (StatusCode::INTERNAL_SERVER_ERROR, "Failed to create new project").into_response()
+        Err(e) => {
+            println!("{:?}",e);
+            (StatusCode::INTERNAL_SERVER_ERROR, "Failed to create new project").into_response()
+        }
     }
 }   
 
