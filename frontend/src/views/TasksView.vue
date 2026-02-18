@@ -54,6 +54,7 @@ const addTask = async () => {
       console.log("Error Creating task:",error.message);
     }
   }
+  newTaskName.value = "";
 }
 
 const deleteTask = (task_id: number) => {
