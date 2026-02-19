@@ -54,7 +54,8 @@ async fn main() {
         .with_state(pool)
         .layer(cors);
 
-    let addr = SocketAddr::from(([127, 0, 0, 1], 6767));
+let addr = SocketAddr::from(([0, 0, 0, 0], 6767));
+
     println!("Server running on http://{}", addr);
 
     let listener = TcpListener::bind(addr).await.unwrap();

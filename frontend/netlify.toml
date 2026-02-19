@@ -1,0 +1,4 @@
+[[redirects]]
+  from = "/api/*"
+  to = "https://todo-backend-it9c.onrender.com/"
+  status = 200
