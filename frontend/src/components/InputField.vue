@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ArrowRightIcon } from "@heroicons/vue/24/solid";
 
-defineProps<{ labelText: string; modelValue: string }>();
+defineProps<{ labelText: string; modelValue: string; placeholder: string}>();
 defineEmits<{
   (e: "onSubmit"): void;
   (e: "update:modelValue", value: string): void;
@@ -27,7 +27,7 @@ defineEmits<{
           dark:focus:bg-violet-900/30 dark:border-gray-700 
           transition-all duration-200 
           placeholder:text-gray-400 dark:placeholder:text-gray-500"
-        placeholder="add project here"
+        :placeholder="placeholder"
         :value="modelValue"
         @input="
           $emit('update:modelValue', ($event.target as HTMLInputElement).value)

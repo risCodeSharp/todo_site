@@ -82,6 +82,7 @@ const reloadTasks = () => {
     <div class="mx-auto mb-10">
       <InputField
         class="block"
+        placeholder="task name"
         label-text="Add Task"
         v-model="newTaskName"
         @on-submit="addTask()"

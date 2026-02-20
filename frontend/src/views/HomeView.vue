@@ -4,11 +4,14 @@ import axios from "axios";
 import ProjectList from "@/components/ProjectList.vue";
 import InputField from "@/components/InputField.vue";
 import type { Project } from "@/types";
+import Loading from "@/components/Loading.vue";
 
 const newProjectName: Ref<string> = ref("");
 const projectList: Ref<Project[]> = ref([]);
+const isLoading: Ref<boolean> = ref(true);
 
 const fetchProjects = async () => {
+  isLoading.value = true;
   try {
     const response = await axios.get<Project[]>("/api/projects", {
       headers: { Accept: "application/json" },
@@ -19,6 +22,8 @@ const fetchProjects = async () => {
     if (error instanceof Error) {
       console.log("error: ", error.message);
     }
+  } finally {
+    isLoading.value =  false;
   }
 };
 
@@ -62,10 +67,15 @@ onMounted(fetchProjects);
       Todo Projects!
     </h1>
     <InputField
-      label-text="ProjectName"
+      label-text="Project Name"
+      placeholder="project name"
       @on-submit="addProject"
       v-model="newProjectName"
     />
-  <ProjectList :project-list="projectList" @delete="deleteProject" />
+    <div v-if="isLoading" class="p-5 mt-4 flex items-center justify-center gap-3">
+      <Loading /> 
+      <p>Loading projects</p>
+    </div>
+  <ProjectList v-else :project-list="projectList" @delete="deleteProject" />
   </div>
 </template>
